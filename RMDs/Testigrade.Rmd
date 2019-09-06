@@ -1,0 +1,112 @@
+---
+title: "Testigrade"
+runtime: shiny
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = '~/master/Tardigrade_Directory')
+setwd('~/master/Tardigrade_Directory')
+```
+
+```{r libraries, echo=FALSE}
+library(tidyverse)
+library(rgdal)
+library(readr)
+
+library(shiny)
+library(DT)
+library(dygraphs)
+library(xts)
+library(leaflet)
+```
+
+
+
+# Goals
+
+### David
+
+1. world map
+2. view a portion of the csv file
+3. some toggling ability to select subsets of points by attributes
+
+
+### Paul
+
+1. The ability to just enter data on a line of the spreadsheet and have the map auto update
+2. The ability to click on a point and have the relevant attribute data (including picture) pop up
+3. The ability to query out points based on attributes like species, subspecies, etc
+
+
+
+# Display Worldmap
+
+```{r read map, echo=FALSE}
+map <- readOGR("data/world/Countries_WGS84/Countries_WGS84.shp")
+
+map$OBJECTID <- as.numeric(map$OBJECTID)
+```
+
+```{r ui, echo=FALSE}
+ui <- fluidPage(
+  titlePanel(p("World Map", style = "color:#3474A7")),
+  sidebarLayout(
+    sidebarPanel(
+      p("Made with", a("Shiny",
+        href = "http://shiny.rstudio.com"
+      ), "."),
+      img(
+        src = "imageShiny.png",
+        width = "70px", height = "70px"
+      )
+    ),
+    mainPanel(
+      leafletOutput(outputId = "map")
+    )
+  )
+)
+```
+
+```{r server, echo=FALSE}
+server <- function(input, output) {
+
+  output$map <- renderLeaflet({
+
+    # Create leaflet
+    pal <- colorBin("YlOrRd", domain = map$OBJECTID, bins = 7)
+
+    labels <- sprintf("%s: %g", map$CNTRY_NAME, map$OBJECTID) %>%
+      lapply(htmltools::HTML)
+
+    l <- leaflet(map) %>%
+      addTiles() %>%
+      addPolygons(
+        fillColor = ~ pal(OBJECTID),
+        color = "white",
+        dashArray = "3",
+        fillOpacity = 0.7,
+        label = labels
+      ) %>%
+      leaflet::addLegend(
+        pal = pal, values = ~OBJECTID,
+        opacity = 0.7, title = NULL
+      )
+  })
+}
+```
+
+
+```{r Run App, echo=FALSE}
+# run
+shinyApp(ui = ui, server = server)
+```
+
+
+
+
+
+
+
+
