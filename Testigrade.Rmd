@@ -6,15 +6,12 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = '~/master/Tardigrade_Directory')
-setwd('~/master/Tardigrade_Directory')
 ```
 
 ```{r libraries, echo=FALSE}
 library(tidyverse)
 library(rgdal)
 library(readr)
-
 library(shiny)
 library(DT)
 library(dygraphs)
@@ -44,7 +41,7 @@ library(leaflet)
 # Display Worldmap
 
 ```{r read map, echo=FALSE}
-map <- readOGR("data/world/Countries_WGS84/Countries_WGS84.shp")
+map <- readOGR("Countries_WGS84.shp")
 
 map$OBJECTID <- as.numeric(map$OBJECTID)
 ```
