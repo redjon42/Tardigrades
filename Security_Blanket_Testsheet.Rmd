@@ -6,18 +6,12 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_knit$set(root.dir = '~/master/Tardigrade_Directory')
-setwd('~/master/Tardigrade_Directory')
-getwd()
 ```
 
 ```{r libraries, echo=FALSE}
-# Familiar
 library(tidyverse)
 library(rgdal)
 library(readr)
-
-# Unfamiliar
 library(shiny)
 library(DT)
 library(dygraphs)
@@ -81,8 +75,8 @@ In all of R code chunks above the `echo = FALSE` attribute is used. This is to p
 
 ```{r Ohio, echo=FALSE}
 # reading
-data <- read_csv("data/ohio/test_ohio.csv")
-map <- readOGR("data/ohio/fe_2007_39_county/fe_2007_39_county.shp")
+data <- read_csv("test_ohio.csv")
+map <- readOGR("fe_2007_39_county.shp")
 ```
 
 
